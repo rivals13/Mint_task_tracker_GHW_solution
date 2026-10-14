@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mint — Daily Plan</title>
+  <meta name="description" content="Mint is a calm, minimal task tracker for your daily plan." />
+
+  <!-- Typography: Plus Jakarta Sans with a system-font fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- No JavaScript: no opening sequence to play, so keep the splash away. -->
+  <noscript><style>.splash { display: none !important; }</style></noscript>
+</head>
+<body>
+  <!-- One definition of the Mint leaf mark, used by the splash and the rail. -->
+  <svg class="icon-sprite" aria-hidden="true" focusable="false">
+    <symbol id="mint-leaf" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <!-- blade -->
+        <path d="M12 2.6 C 9.2 5.2, 7.2 8.2, 7 11.4 C 6.8 14.6, 8.9 17.6, 12 20.2 C 15.1 17.6, 17.2 14.6, 17 11.4 C 16.8 8.2, 14.8 5.2, 12 2.6 Z" />
+        <!-- midrib -->
+        <path d="M12 20.1 C 12 15.6, 12 9.6, 12 4.4" />
+        <!-- side veins -->
+        <path d="M12 17.3 C 10.8 16.6, 9.8 15.6, 9.1 14.3" />
+        <path d="M12 17.3 C 13.2 16.6, 14.2 15.6, 14.9 14.3" />
+        <path d="M12 13.9 C 11.1 13.1, 10.5 12.2, 10.1 11" />
+        <path d="M12 13.9 C 12.9 13.1, 13.5 12.2, 13.9 11" />
+        <!-- stem -->
+        <path d="M12 20.2 C 12.3 21.2, 12.3 21.9, 12.2 22.6" />
+      </g>
+    </symbol>
+  </svg>
+
+  <!-- ============ Opening sequence (removed once the dashboard is in) ============ -->
+  <div class="splash" id="splash" aria-hidden="true">
+    <div class="splash-inner">
+      <span class="splash-leaf">
+        <svg class="leaf" aria-hidden="true" focusable="false"><use href="#mint-leaf"></use></svg>
+      </span>
+      <span class="splash-word">mint</span>
+      <span class="splash-bar"><span class="splash-bar-fill"></span></span>
+      <span class="splash-caption">Making room for a fresh start.</span>
+    </div>
+  </div>
+
+  <!-- If script.js never gets to run (a blocked or broken CDN, a parse error),
+       this keeps the opening from becoming a permanent loading screen. -->
+  <script>
+    window.setTimeout(function () {
+      var splash = document.getElementById("splash");
+      if (splash) splash.parentNode.removeChild(splash);
+    }, 2400);
+  </script>
+
+  <a class="skip-link" href="#taskInput">Skip to task entry</a>
+
+  <!-- ============ APP SHELL: rail | workspace | top tasks ============ -->
+  <div class="shell" id="shell">
+
+    <!-- ---------- A. Left navigation rail ---------- -->
+    <aside class="rail" aria-label="Primary">
+      <a class="brand" href="#main" aria-label="Mint home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg class="leaf" focusable="false"><use href="#mint-leaf"></use></svg>
+        </span>
+        <span class="brand-word">mint</span>
+      </a>
+
+      <nav class="rail-nav" aria-label="Workspace sections">
+        <button class="rail-link is-active" type="button" data-nav="today" aria-current="page">
+          <i data-lucide="layout-grid" aria-hidden="true"></i>
+          <span class="rail-label">Today</span>
+        </button>
+        <button class="rail-link" type="button" data-nav="priority">
+          <i data-lucide="star" aria-hidden="true"></i>
+          <span class="rail-label">Priorities</span>
+        </button>
+        <button class="rail-link" type="button" data-nav="done">
+          <i data-lucide="check-check" aria-hidden="true"></i>
+          <span class="rail-label">Done</span>
+        </button>
+      </nav>
+
+      <div class="rail-foot">
+        <div class="profile" tabindex="0" aria-label="Signed in as Alex Rivera">
+          <span class="avatar" aria-hidden="true">AR</span>
+          <span class="profile-meta">
+            <span class="profile-name">Alex Rivera</span>
+            <span class="profile-role">Studio lead</span>
+          </span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ---------- B. Main task workspace ---------- -->
+    <main class="workspace" id="main">
+      <header class="workspace-head">
+        <h1 class="title">Check your daily plan</h1>
+        <p class="subtitle">A little progress goes a long way.</p>
+
+        <!-- Three delicate mint wavy strokes, drawn inline (no image) -->
+        <svg class="waves" viewBox="0 0 148 34" width="148" height="34" aria-hidden="true" focusable="false">
+          <path d="M2 7 C 14 1, 26 13, 38 7 S 62 1, 74 7 S 98 13, 110 7 S 134 1, 146 7" />
+          <path d="M2 18 C 14 12, 26 24, 38 18 S 62 12, 74 18 S 98 24, 110 18" />
+          <path d="M2 29 C 12 24, 22 34, 32 29 S 52 24, 62 29" />
+        </svg>
+      </header>
+
+      <!-- Add a task -->
+      <form class="composer" id="taskForm" novalidate>
+        <label class="sr-only" for="taskInput">Task name</label>
+        <span class="composer-icon" aria-hidden="true"><i data-lucide="plus"></i></span>
+        <input
+          class="composer-input"
+          id="taskInput"
+          name="task"
+          type="text"
+          placeholder="What needs doing today?"
+          autocomplete="off"
+          maxlength="140"
+          aria-describedby="composerHint"
+        />
+        <button class="btn-add" type="submit" aria-label="Add task">Add</button>
+      </form>
+      <p class="composer-hint" id="composerHint" role="status" aria-live="polite"></p>
+
+      <!-- Filters + clear completed -->
+      <div class="toolbar">
+        <div class="filters" role="group" aria-label="Filter tasks">
+          <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">
+            All <span class="filter-count" data-count="all">0</span>
+          </button>
+          <button class="filter" type="button" data-filter="active" aria-pressed="false">
+            Active <span class="filter-count" data-count="active">0</span>
+          </button>
+          <button class="filter" type="button" data-filter="completed" aria-pressed="false">
+            Completed <span class="filter-count" data-count="completed">0</span>
+          </button>
+        </div>
+        <button class="btn-ghost" type="button" id="clearCompleted" hidden>
+          <i data-lucide="eraser" aria-hidden="true"></i>
+          Clear completed
+        </button>
+      </div>
+
+      <!-- Task list (rendered by script.js) -->
+      <ul class="task-list" id="taskList" aria-label="Tasks"></ul>
+
+      <!-- Empty states -->
+      <div class="empty" id="emptyState" hidden>
+        <span class="empty-mark" aria-hidden="true"><i data-lucide="circle-dashed"></i></span>
+        <p class="empty-title" id="emptyTitle">Your list is clear</p>
+        <p class="empty-text" id="emptyText">Add your first task above and take it one step at a time.</p>
+      </div>
+
+      <!-- Progress summary -->
+      <footer class="progress">
+        <div class="progress-text">
+          <span class="progress-strong" id="progressCount">0 of 0 done</span>
+          <span class="progress-muted" id="progressNote">Nothing scheduled yet</span>
+        </div>
+        <div
+          class="progress-track"
+          role="progressbar"
+          aria-labelledby="progressCount"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+        >
+          <span class="progress-fill" id="progressFill"></span>
+        </div>
+      </footer>
+    </main>
+
+    <!-- ---------- C. Right-side "Top tasks" panel ---------- -->
+    <aside class="top-panel" aria-labelledby="topPanelTitle">
+      <div class="top-panel-head">
+        <h2 class="top-panel-title" id="topPanelTitle">Top tasks</h2>
+        <p class="top-panel-sub">The few things that matter most today.</p>
+      </div>
+
+      <ul class="top-list" id="priorityList" aria-label="Priority tasks"></ul>
+
+      <p class="top-empty" id="topEmpty" hidden>
+        No top tasks yet — mark a task with the star to pin it here.
+      </p>
+
+      <p class="top-panel-foot">
+        <i data-lucide="corner-down-right" aria-hidden="true"></i>
+        Select a task to jump straight to it.
+      </p>
+    </aside>
+  </div>
+
+  <!-- Floating add-task button (scrolls to and focuses the input) -->
+  <button class="fab" type="button" id="fab" aria-label="New task">
+    <i data-lucide="plus" aria-hidden="true"></i>
+  </button>
+
+  <!-- GSAP + Lucide from CDN. The app stays fully functional if either fails. -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://unpkg.com/lucide@0.452.0/dist/umd/lucide.min.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>
